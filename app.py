@@ -189,7 +189,7 @@ class AdminLogin(BaseModel):
 @app.post("/admin/login")
 def admin_login(data: AdminLogin):
     env_user = os.environ.get("ADMIN_USERNAME", "admin")
-    env_pass = os.environ.get("ADMIN_PASSWORD", "nagarseva2026")
+    env_pass = os.environ.get("ADMIN_PASSWORD", "nagarseva2025")
     
     if data.username == env_user and data.password == env_pass:
         return {"success": True}
