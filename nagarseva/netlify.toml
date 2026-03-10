@@ -1,5 +1,0 @@
-[[redirects]]
-  from = "/api/*"
-  to = ":backend_url/:splat"
-  status = 200
-  force = true
