@@ -351,6 +351,89 @@
       width: 20px;
     }
 
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 32px 0 24px;
+      color: var(--gray-500);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .auth-divider::before {
+      margin-right: 12px;
+    }
+
+    .auth-divider::after {
+      margin-left: 12px;
+    }
+
+    .auth-form input {
+      width: 100%;
+      max-width: 320px;
+      padding: 14px;
+      border: 1px solid var(--gray-300);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .auth-form input:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(232, 93, 4, 0.1);
+    }
+
+    .auth-btn-email {
+      width: 100%;
+      max-width: 320px;
+      padding: 14px;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .auth-btn-email:hover {
+      background: var(--orange-dark);
+    }
+
+    .auth-msg {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--gray-500);
+      text-align: center;
+      line-height: 1.5;
+      max-width: 320px;
+      margin: 16px auto 0;
+    }
+
+    .auth-error-msg {
+      display: none;
+      max-width: 320px;
+      margin: 0 auto 16px auto;
+      color: #DC2626;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      text-align: center;
+    }
+
     /* USER PROFILE */
     .user-pill {
       display: flex;
@@ -610,11 +693,11 @@
             style="background: var(--orange); color: #fff !important; padding: 8px 20px; border-radius: 8px; font-weight: 600;">Login</a>
         </li>
         <li id="userContainer" style="margin-left: 10px; display: none;">
-          <div class="user-pill">
+          <a href="user.html" class="user-pill" style="text-decoration: none; color: inherit;">
             <img id="userPhoto" src="" alt="">
             <span id="userName">User</span>
             <span class="logout-btn" id="navLogoutBtn">Logout</span>
-          </div>
+          </a>
         </li>
       </ul>
     </div>
@@ -637,11 +720,24 @@
       <div id="authOverlay">
         <div class="auth-icon">🔒</div>
         <h2>Secure Login Required</h2>
-        <p>To ensure authenticity and prevent spam, please sign in with Google to submit a municipal complaint.</p>
+        <p>To ensure authenticity and prevent spam, please sign in to submit a municipal complaint.</p>
+
         <button class="auth-btn" id="loginBtn">
           <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
           Sign in with Google
         </button>
+
+        <div class="auth-divider">OR</div>
+
+        <form class="auth-form" id="emailAuthForm">
+          <div id="authErrorMsg" class="auth-error-msg"></div>
+          <input type="email" id="authEmail" placeholder="Email Address" required>
+          <input type="password" id="authPass" placeholder="Password (min 6 chars)" required minlength="6">
+          <button type="submit" class="auth-btn-email" id="emailLoginBtn">Sign In / Register</button>
+        </form>
+        <p class="auth-msg">If you don't have an account, entering your email and password will safely create one for
+          you.</p>
+
       </div>
 
       <div class="form-card" id="formSection" style="display: none;">
@@ -734,7 +830,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
     import { firebaseConfig } from "./firebase-config.js";
 
@@ -801,6 +897,38 @@
 
     document.getElementById('loginBtn').onclick = () => doLogin();
     document.getElementById('navLoginBtn').onclick = (e) => doLogin(e);
+
+    // EMAIL LOGIN / REGISTER
+    document.getElementById('emailAuthForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('emailLoginBtn');
+      const errEl = document.getElementById('authErrorMsg');
+      const email = document.getElementById('authEmail').value.trim();
+      const pass = document.getElementById('authPass').value.trim();
+
+      errEl.style.display = 'none';
+      btn.innerHTML = '<span class="spin"></span> Processing...';
+      btn.disabled = true;
+
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+        try {
+          await signInWithEmailAndPassword(auth, email, pass);
+        } catch (err) {
+          if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/invalid-login-credentials') {
+            await createUserWithEmailAndPassword(auth, email, pass);
+          } else {
+            throw err;
+          }
+        }
+      } catch (err) {
+        errEl.textContent = '❌ ' + (err.message.replace('Firebase:', '').trim() || 'Authentication failed');
+        errEl.style.display = 'block';
+      } finally {
+        btn.innerHTML = 'Sign In / Register';
+        btn.disabled = false;
+      }
+    };
 
     // LOGOUT FUNCTION
     document.getElementById('navLogoutBtn').onclick = () => {

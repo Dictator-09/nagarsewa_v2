@@ -572,6 +572,171 @@
       padding: 8px 20px;
       border-radius: 8px;
     }
+
+    /* AUTH MODAL */
+    .auth-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .auth-overlay.open {
+      display: flex;
+    }
+
+    .auth-modal {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      animation: modalIn 0.3s ease;
+      color: var(--gray-900);
+    }
+
+    @keyframes modalIn {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .auth-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--gray-500);
+      line-height: 1;
+    }
+
+    .auth-close:hover {
+      color: var(--gray-900);
+    }
+
+    .auth-modal h2 {
+      font-family: 'Merriweather', serif;
+      font-size: 24px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .auth-btn-google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--gray-300);
+      border-radius: 12px;
+      background: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .auth-btn-google:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-500);
+    }
+
+    .auth-btn-google img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 24px 0;
+      color: var(--gray-500);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .auth-divider::before {
+      margin-right: 12px;
+    }
+
+    .auth-divider::after {
+      margin-left: 12px;
+    }
+
+    .auth-form input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--gray-300);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .auth-form input:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(232, 93, 4, 0.1);
+    }
+
+    .auth-btn-email {
+      width: 100%;
+      padding: 14px;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .auth-btn-email:hover {
+      background: var(--orange-dark);
+    }
+
+    .auth-msg {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--gray-500);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .auth-error-msg {
+      display: none;
+      color: #DC2626;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -589,11 +754,11 @@
         <li><a href="dashboard.html" class="dash">Admin Dashboard</a></li>
         <li id="loginLi" style="display: none;"><a href="#" id="navLoginBtn">Login</a></li>
         <li id="userContainer" style="margin-left: 10px; display: none;">
-          <div class="user-pill">
+          <a href="user.html" class="user-pill" style="text-decoration: none; color: inherit;">
             <img id="userPhoto" src="" alt="">
             <span id="userName">User</span>
             <span class="logout-btn" id="navLogoutBtn">Logout</span>
-          </div>
+          </a>
         </li>
       </ul>
     </div>
@@ -659,9 +824,33 @@
     </div>
   </div>
 
+  <!-- AUTH MODAL -->
+  <div class="auth-overlay" id="authOverlay" onclick="if(event.target===this) this.classList.remove('open')">
+    <div class="auth-modal">
+      <span class="auth-close" onclick="document.getElementById('authOverlay').classList.remove('open')">&times;</span>
+      <h2>Welcome to NagarSeva</h2>
+
+      <button class="auth-btn-google" id="googleLoginBtn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+        Continue with Google
+      </button>
+
+      <div class="auth-divider">OR</div>
+
+      <form class="auth-form" id="emailAuthForm">
+        <div id="authErrorMsg" class="auth-error-msg"></div>
+        <input type="email" id="authEmail" placeholder="Email Address" required>
+        <input type="password" id="authPass" placeholder="Password (min 6 chars)" required minlength="6">
+        <button type="submit" class="auth-btn-email" id="emailLoginBtn">Sign In / Register</button>
+      </form>
+      <p class="auth-msg">If you don't have an account, entering your email and password will safely create one for you.
+      </p>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
     import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
     import { firebaseConfig } from "./firebase-config.js";
 
@@ -683,33 +872,76 @@
       }
     });
 
-    // LOGIN FUNCTION
-    document.getElementById('navLoginBtn').onclick = async (e) => {
+    // OPEN MODAL
+    document.getElementById('navLoginBtn').onclick = (e) => {
       e.preventDefault();
-      const btn = e.target;
+      document.getElementById('authOverlay').classList.add('open');
+    };
+
+    // GOOGLE LOGIN
+    document.getElementById('googleLoginBtn').onclick = async (e) => {
+      e.preventDefault();
+      const btn = e.target.closest('button');
       if (btn.classList.contains('loading')) return;
 
       btn.classList.add('loading');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<span class="spin"></span> Logging in...';
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '<span class="spin" style="border-color:var(--gray-900);border-top-color:transparent;"></span>';
 
       try {
         await setPersistence(auth, browserLocalPersistence);
         await signInWithPopup(auth, provider);
+        document.getElementById('authOverlay').classList.remove('open');
       } catch (err) {
-        console.error("Auth Error:", err);
-        // Ignore cancelled-popup-request as it's usually benign
         if (err.code !== 'auth/cancelled-popup-request') {
-          alert("Login failed: " + err.message);
+          const errEl = document.getElementById('authErrorMsg');
+          errEl.textContent = '❌ Google Login failed';
+          errEl.style.display = 'block';
         }
       } finally {
         btn.classList.remove('loading');
-        btn.innerHTML = originalText;
+        btn.innerHTML = originalHTML;
+      }
+    };
+
+    // EMAIL LOGIN / REGISTER
+    document.getElementById('emailAuthForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('emailLoginBtn');
+      const errEl = document.getElementById('authErrorMsg');
+      const email = document.getElementById('authEmail').value.trim();
+      const pass = document.getElementById('authPass').value.trim();
+
+      errEl.style.display = 'none';
+      btn.innerHTML = '<span class="spin"></span> Processing...';
+      btn.disabled = true;
+
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+        try {
+          await signInWithEmailAndPassword(auth, email, pass);
+        } catch (err) {
+          // If invalid credential or user not found, try creating account.
+          if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/invalid-login-credentials') {
+            await createUserWithEmailAndPassword(auth, email, pass);
+          } else {
+            throw err;
+          }
+        }
+        document.getElementById('authOverlay').classList.remove('open');
+      } catch (err) {
+        errEl.textContent = '❌ ' + (err.message.replace('Firebase:', '').trim() || 'Authentication failed');
+        errEl.style.display = 'block';
+      } finally {
+        btn.innerHTML = 'Sign In / Register';
+        btn.disabled = false;
       }
     };
 
     // LOGOUT FUNCTION
-    document.getElementById('navLogoutBtn').onclick = () => {
+    document.getElementById('navLogoutBtn').onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       signOut(auth).then(() => location.reload());
     };
 
