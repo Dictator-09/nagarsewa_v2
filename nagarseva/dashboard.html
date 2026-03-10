@@ -499,10 +499,9 @@
       color: #16A34A
     }
 
-    .p-Very-Low {
-      background: #F9FAFB;
-      color: #6B7280;
-      border: 1px solid var(--gray-300)
+    .p-Very {
+      background: #F8FAFC;
+      color: #64748B
     }
 
     .vbtn {
@@ -1074,7 +1073,7 @@
           tbody.innerHTML = filtered.map(c => {
             const sk = (c.status || 'Open').replace(' ', '-');
             const pk = c.ai_priority || 'Medium';
-            const pkClass = pk.replace(/\s+/g, '-').replace(/[()]/g, ''); // Handle spaces and brackets
+            const pkClass = pk.split(' ')[0]; // Extract first word (Severe, High, Medium, Low, Very)
             const date = new Date(c.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
             const dept = (c.ai_department || '—').substring(0, 28) + ((c.ai_department || '').length > 28 ? '...' : '');
             // Safely encode complaint data for onclick

@@ -386,10 +386,14 @@
       color: #16A34A
     }
 
-    .p-Very-Low {
-      background: #F9FAFB;
-      color: #6B7280;
-      border: 1px solid var(--gray-300)
+    .p-Very {
+      background: #F8FAFC;
+      color: #64748B
+    }
+
+    .p-Low {
+      background: #F0FDF4;
+      color: #16A34A
     }
 
     /* TIMELINE */
@@ -980,7 +984,7 @@
 
         // Priority badge
         const p = c.ai_priority || 'Medium';
-        const pkClass = p.replace(/\s+/g, '-').replace(/[()]/g, ''); // Handle spaces and brackets
+        const pkClass = p.split(' ')[0]; // Extract first word (Severe, High, Medium, Low, Very)
         document.getElementById('rPriority').innerHTML = `<span class="pbadge p-${pkClass}">${p}</span>`;
 
         // Status badge

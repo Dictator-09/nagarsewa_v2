@@ -304,10 +304,14 @@
       color: #16A34A
     }
 
-    .p-Very-Low {
-      background: #F9FAFB;
-      color: #6B7280;
-      border: 1px solid var(--gray-300)
+    .p-Very {
+      background: #F8FAFC;
+      color: #64748B
+    }
+
+    .p-Low {
+      background: #F0FDF4;
+      color: #16A34A
     }
 
     .spinner-full {
@@ -550,7 +554,7 @@
         grid.innerHTML = docs.map(c => {
           const sKey = c.status.replace(' ', '-');
           const icons = { Open: '🔴', 'In Progress': '🔵', Resolved: '🟢' };
-          const pKey = c.ai_priority ? c.ai_priority.replace(/\s+/g, '-').replace(/[()]/g, '') : 'Medium';
+          const pKey = c.ai_priority ? c.ai_priority.split(' ')[0] : 'Medium';
 
           return `
                 <div class="c-card">
