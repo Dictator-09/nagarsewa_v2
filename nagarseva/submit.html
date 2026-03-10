@@ -8,124 +8,8 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
   <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0
-    }
-
-    :root {
-      --orange: #E85D04;
-      --orange-pale: #FFF4EE;
-      --orange-dark: #cc5200;
-      --green: #2D6A4F;
-      --green-pale: #EEF7F2;
-      --green-dark: #235c43;
-      --gray-50: #F9FAFB;
-      --gray-100: #F3F4F6;
-      --gray-300: #D1D5DB;
-      --gray-500: #6B7280;
-      --gray-700: #374151;
-      --gray-900: #111827
-    }
-
-    body {
-      font-family: 'Source Sans 3', sans-serif;
-      color: var(--gray-900);
-      background: #fff;
-      line-height: 1.6
-    }
-
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: #fff;
-      border-bottom: 3px solid var(--orange);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, .07)
-    }
-
-    .nav-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 68px
-    }
-
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none
-    }
-
-    .nav-logo {
-      width: 44px;
-      height: 44px;
-      background: var(--orange);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Merriweather', serif;
-      font-weight: 900;
-      font-size: 17px;
-      color: #fff
-    }
-
-    .nav-title {
-      font-family: 'Merriweather', serif;
-      font-weight: 700;
-      font-size: 20px;
-      color: var(--gray-900)
-    }
-
-    .nav-title span {
-      color: var(--orange)
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      list-style: none
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--gray-700);
-      font-weight: 600;
-      font-size: 15px;
-      padding: 8px 16px;
-      border-radius: 6px;
-      transition: .2s
-    }
-
-    .nav-links a:hover {
-      background: var(--orange-pale);
-      color: var(--orange)
-    }
-
-    .nav-links a.active {
-      background: var(--orange);
-      color: #fff
-    }
-
-    .nav-links .dash {
-      background: var(--green) !important;
-      color: #fff !important
-    }
-
-    .nav-links .dash:hover {
-      background: var(--green-dark) !important
-    }
-
     .page-header {
       background: var(--gray-50);
       padding: 48px 24px;
@@ -312,154 +196,7 @@
       margin-bottom: 20px
     }
 
-    /* AUTH OVERLAY */
-    #authOverlay {
-      background: #fff;
-      border: 1px solid var(--gray-100);
-      border-radius: 16px;
-      padding: 60px 40px;
-      text-align: center;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, .07);
-      margin-bottom: 40px;
-    }
 
-    .auth-icon {
-      font-size: 48px;
-      margin-bottom: 20px;
-    }
-
-    .auth-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: #fff;
-      border: 1.5px solid var(--gray-300);
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: .2s;
-      margin-top: 20px;
-    }
-
-    .auth-btn:hover {
-      background: var(--gray-50);
-      border-color: var(--gray-900);
-    }
-
-    .auth-btn img {
-      width: 20px;
-    }
-
-    .auth-divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      margin: 32px 0 24px;
-      color: var(--gray-500);
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .auth-divider::before,
-    .auth-divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid var(--gray-200);
-    }
-
-    .auth-divider::before {
-      margin-right: 12px;
-    }
-
-    .auth-divider::after {
-      margin-left: 12px;
-    }
-
-    .auth-form input {
-      width: 100%;
-      max-width: 320px;
-      padding: 14px;
-      border: 1px solid var(--gray-300);
-      border-radius: 10px;
-      margin-bottom: 16px;
-      font-size: 15px;
-      outline: none;
-      font-family: inherit;
-    }
-
-    .auth-form input:focus {
-      border-color: var(--orange);
-      box-shadow: 0 0 0 3px rgba(232, 93, 4, 0.1);
-    }
-
-    .auth-btn-email {
-      width: 100%;
-      max-width: 320px;
-      padding: 14px;
-      background: var(--orange);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .auth-btn-email:hover {
-      background: var(--orange-dark);
-    }
-
-    .auth-msg {
-      margin-top: 16px;
-      font-size: 13px;
-      color: var(--gray-500);
-      text-align: center;
-      line-height: 1.5;
-      max-width: 320px;
-      margin: 16px auto 0;
-    }
-
-    .auth-error-msg {
-      display: none;
-      max-width: 320px;
-      margin: 0 auto 16px auto;
-      color: #DC2626;
-      background: #FEF2F2;
-      border: 1px solid #FECACA;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 13px;
-      text-align: center;
-    }
-
-    /* USER PROFILE */
-    .user-pill {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--gray-50);
-      padding: 6px 12px;
-      border-radius: 30px;
-      border: 1px solid var(--gray-100);
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .user-pill img {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-    }
-
-    .logout-btn {
-      color: var(--orange);
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 12px;
-      margin-left: 5px;
-    }
 
     /* SUCCESS */
     .success-card {
@@ -547,27 +284,6 @@
       font-weight: 700
     }
 
-    .pbadge {
-      padding: 4px 11px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700
-    }
-
-    .p-High {
-      background: #FEF2F2;
-      color: #DC2626
-    }
-
-    .p-Medium {
-      background: #FFFBEB;
-      color: #D97706
-    }
-
-    .p-Low {
-      background: #F0FDF4;
-      color: #16A34A
-    }
 
     .track-link {
       display: inline-block;
@@ -947,7 +663,7 @@
 
     // Call local FastAPI model to analyze the complaint
     async function analyzeWithAI(title, description, category) {
-      const res = await fetch('http://localhost:8000/predict', {
+      const res = await fetch('/api/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
