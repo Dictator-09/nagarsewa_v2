@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Track Complaint – NagarSeva CRM</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --orange: #E85D04;
+      --orange-pale: #FFF4EE;
+      --orange-dark: #cc5200;
+      --green: #2D6A4F;
+      --green-pale: #EEF7F2;
+      --green-dark: #235c43;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-300: #D1D5DB;
+      --gray-500: #6B7280;
+      --gray-700: #374151;
+      --gray-900: #111827
+    }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      color: var(--gray-900);
+      background: #fff;
+      line-height: 1.6
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 3px solid var(--orange);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .07)
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none
+    }
+
+    .nav-logo {
+      width: 44px;
+      height: 44px;
+      background: var(--orange);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Merriweather', serif;
+      font-weight: 900;
+      font-size: 17px;
+      color: #fff
+    }
+
+    .nav-title {
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--gray-900)
+    }
+
+    .nav-title span {
+      color: var(--orange)
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--gray-700);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: .2s
+    }
+
+    .nav-links a:hover {
+      background: var(--orange-pale);
+      color: var(--orange)
+    }
+
+    .nav-links a.active {
+      background: var(--orange);
+      color: #fff
+    }
+
+    .nav-links .dash {
+      background: var(--green) !important;
+      color: #fff !important
+    }
+
+    .nav-links .dash:hover {
+      background: var(--green-dark) !important
+    }
+
+    .page-header {
+      background: var(--gray-50);
+      padding: 48px 24px;
+      border-bottom: 1px solid var(--gray-100)
+    }
+
+    .ph-inner {
+      max-width: 1200px;
+      margin: 0 auto
+    }
+
+    .breadcrumb {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-bottom: 12px
+    }
+
+    .breadcrumb a {
+      color: var(--orange);
+      text-decoration: none;
+      font-weight: 600
+    }
+
+    .page-header h1 {
+      font-family: 'Merriweather', serif;
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 8px
+    }
+
+    .page-header p {
+      font-size: 17px;
+      color: var(--gray-500)
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 48px;
+      align-items: start
+    }
+
+    /* SEARCH */
+    .search-card {
+      background: #fff;
+      border: 1px solid var(--gray-100);
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .07)
+    }
+
+    .search-card h2 {
+      font-family: 'Merriweather', serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 22px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--orange-pale)
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px
+    }
+
+    .search-row input {
+      flex: 1;
+      padding: 14px 18px;
+      border: 2px solid var(--gray-300);
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: .2s;
+      font-family: 'Source Sans 3', sans-serif;
+      letter-spacing: .5px;
+      text-transform: uppercase
+    }
+
+    .search-row input::placeholder {
+      text-transform: none;
+      letter-spacing: 0
+    }
+
+    .search-row input:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(232, 93, 4, .1)
+    }
+
+    .search-btn {
+      padding: 14px 24px;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .search-btn:hover {
+      background: var(--orange-dark)
+    }
+
+    .error-box {
+      display: none;
+      background: #FEF2F2;
+      border: 1.5px solid #FECACA;
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #DC2626;
+      margin-top: 16px;
+      font-size: 14px
+    }
+
+    /* RESULT */
+    .result-card {
+      display: none;
+      margin-top: 28px;
+      border: 1px solid var(--gray-100);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, .07)
+    }
+
+    .result-card.show {
+      display: block
+    }
+
+    .result-header {
+      padding: 24px 28px;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-100);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 12px
+    }
+
+    .result-id {
+      font-family: 'Merriweather', serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--orange)
+    }
+
+    .result-title {
+      font-size: 15px;
+      color: var(--gray-700);
+      margin-top: 5px;
+      font-weight: 600
+    }
+
+    .sbadge {
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap
+    }
+
+    .s-Open {
+      background: var(--orange-pale);
+      color: var(--orange)
+    }
+
+    .s-In-Progress {
+      background: #EFF6FF;
+      color: #2563EB
+    }
+
+    .s-Resolved {
+      background: var(--green-pale);
+      color: var(--green)
+    }
+
+    .result-body {
+      padding: 28px
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 24px
+    }
+
+    .ditem label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      display: block;
+      margin-bottom: 5px
+    }
+
+    .ditem span {
+      font-size: 15px;
+      color: var(--gray-900);
+      font-weight: 600
+    }
+
+    .ai-box {
+      background: var(--gray-50);
+      border-left: 4px solid var(--orange);
+      border-radius: 0 10px 10px 0;
+      padding: 18px 20px;
+      margin-bottom: 24px
+    }
+
+    .ai-box h4 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 10px
+    }
+
+    .ai-box p {
+      font-size: 15px;
+      color: var(--gray-700);
+      line-height: 1.75
+    }
+
+    .pbadge {
+      padding: 4px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-block;
+      white-space: nowrap
+    }
+
+    .p-Severe {
+      background: #450a0a;
+      color: #fca5a5;
+      border: 1px solid #7f1d1d
+    }
+
+    .p-High {
+      background: #FEF2F2;
+      color: #DC2626
+    }
+
+    .p-Medium {
+      background: #FFFBEB;
+      color: #D97706
+    }
+
+    .p-Low {
+      background: #F0FDF4;
+      color: #16A34A
+    }
+
+    .p-Very-Low {
+      background: #F9FAFB;
+      color: #6B7280;
+      border: 1px solid var(--gray-300)
+    }
+
+    /* TIMELINE */
+    .timeline {
+      margin-top: 20px
+    }
+
+    .timeline h4 {
+      font-family: 'Merriweather', serif;
+      font-size: 16px;
+      margin-bottom: 22px
+    }
+
+    .tl {
+      position: relative;
+      padding-left: 36px
+    }
+
+    .tl::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 4px;
+      bottom: 4px;
+      width: 2px;
+      background: var(--gray-100)
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 26px
+    }
+
+    .tl-item:last-child {
+      margin-bottom: 0
+    }
+
+    .tl-dot {
+      position: absolute;
+      left: -36px;
+      top: 2px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      z-index: 1
+    }
+
+    .tl-done {
+      background: var(--green);
+      color: #fff
+    }
+
+    .tl-current {
+      background: var(--orange);
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(232, 93, 4, .18)
+    }
+
+    .tl-pending {
+      background: #fff;
+      color: var(--gray-300);
+      border: 2px solid var(--gray-300)
+    }
+
+    .tl-item h5 {
+      font-weight: 700;
+      font-size: 15px
+    }
+
+    .tl-item p {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-top: 3px
+    }
+
+    /* SIDE */
+    .side-img {
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, .12);
+      aspect-ratio: 3/4
+    }
+
+    .side-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .side-tip {
+      margin-top: 24px;
+      background: var(--orange-pale);
+      border-radius: 14px;
+      padding: 24px;
+      border-left: 4px solid var(--orange)
+    }
+
+    .side-tip h3 {
+      font-family: 'Merriweather', serif;
+      font-size: 16px;
+      color: var(--orange);
+      margin-bottom: 10px
+    }
+
+    .side-tip p {
+      font-size: 14px;
+      color: var(--gray-700);
+      line-height: 1.75
+    }
+
+    .spin {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(255, 255, 255, .4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: sp .7s linear infinite
+    }
+
+    @keyframes sp {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    @media(max-width:900px) {
+      .layout {
+        grid-template-columns: 1fr
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr
+      }
+
+      .nav-links {
+        display: none
+      }
+
+      .side-img {
+        aspect-ratio: 16/9
+      }
+    }
+
+    /* USER PROFILE PILL */
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gray-50);
+      padding: 6px 12px;
+      border-radius: 30px;
+      border: 1px solid var(--gray-200);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .user-pill img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+    }
+
+    .logout-btn {
+      color: var(--orange);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+
+    #navLoginBtn {
+      background: var(--orange);
+      color: #fff !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-logo">NS</div>
+        <span class="nav-title">Nagar<span>Seva</span> CRM</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="submit.html">Submit Complaint</a></li>
+        <li><a href="track.html" class="active">Track Status</a></li>
+        <li><a href="dashboard.html" class="dash">Admin Dashboard</a></li>
+        <li id="loginLi" style="display: none;"><a href="#" id="navLoginBtn">Login</a></li>
+        <li id="userContainer" style="margin-left: 10px; display: none;">
+          <div class="user-pill">
+            <img id="userPhoto" src="" alt="">
+            <span id="userName">User</span>
+            <span class="logout-btn" id="navLogoutBtn">Logout</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="ph-inner">
+      <div class="breadcrumb"><a href="index.html">Home</a> → Track Complaint</div>
+      <h1>🔍 Track Your Complaint</h1>
+      <p>Enter your Complaint ID to see current status, assigned department, and resolution progress.</p>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="search-card">
+        <h2>Enter Your Complaint ID</h2>
+        <div class="search-row">
+          <input type="text" id="trackId" placeholder="e.g. NS-2025-A1B2C3"
+            onkeypress="if(event.key==='Enter')track()" />
+          <button class="search-btn" id="trackBtn" onclick="track()">🔍 Track</button>
+        </div>
+        <div class="error-box" id="errBox"></div>
+      </div>
+
+      <div class="result-card" id="resultCard">
+        <div class="result-header">
+          <div>
+            <div class="result-id" id="rId"></div>
+            <div class="result-title" id="rTitle"></div>
+          </div>
+          <span class="sbadge" id="rBadge"></span>
+        </div>
+        <div class="result-body">
+          <div class="ai-box">
+            <h4>🤖 AI Summary</h4>
+            <p id="rSummary"></p>
+          </div>
+          <div class="detail-grid">
+            <div class="ditem"><label>Citizen Name</label><span id="rName"></span></div>
+            <div class="ditem"><label>Category</label><span id="rCat"></span></div>
+            <div class="ditem"><label>Department Assigned</label><span id="rDept"></span></div>
+            <div class="ditem"><label>Priority</label><span id="rPriority"></span></div>
+            <div class="ditem"><label>Ward / Area</label><span id="rWard"></span></div>
+            <div class="ditem"><label>Date Submitted</label><span id="rDate"></span></div>
+          </div>
+          <div class="timeline">
+            <h4>Complaint Journey</h4>
+            <div class="tl" id="tlTrack"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="side-img"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&q=80"
+          alt="Tracking" /></div>
+      <div class="side-tip">
+        <h3>💡 Can't find your ID?</h3>
+        <p>Your Complaint ID was shown on screen after submission. It looks like <strong>NS-2025-XXXXXX</strong>. If
+          lost, contact your ward office with your registered phone number.</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+    import { firebaseConfig } from "./firebase-config.js";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // AUTH STATE LISTENER
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById('loginLi').style.display = 'none';
+        document.getElementById('userContainer').style.display = 'block';
+        document.getElementById('userName').textContent = user.displayName;
+        document.getElementById('userPhoto').src = user.photoURL;
+      } else {
+        document.getElementById('loginLi').style.display = 'block';
+        document.getElementById('userContainer').style.display = 'none';
+      }
+    });
+
+    // LOGIN FUNCTION
+    document.getElementById('navLoginBtn').onclick = async (e) => {
+      e.preventDefault();
+      const btn = e.target;
+      if (btn.classList.contains('loading')) return;
+
+      btn.classList.add('loading');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="spin"></span> Logging in...';
+
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+        await signInWithPopup(auth, provider);
+      } catch (err) {
+        console.error("Auth Error:", err);
+        // Ignore cancelled-popup-request as it's usually benign
+        if (err.code !== 'auth/cancelled-popup-request') {
+          alert("Login failed: " + err.message);
+        }
+      } finally {
+        btn.classList.remove('loading');
+        btn.innerHTML = originalText;
+      }
+    };
+
+    // LOGOUT FUNCTION
+    document.getElementById('navLogoutBtn').onclick = () => {
+      signOut(auth).then(() => location.reload());
+    };
+
+    // Track a complaint by querying Firestore for the given ID
+    window.track = async function () {
+      const id = document.getElementById('trackId').value.trim().toUpperCase();
+      const errEl = document.getElementById('errBox');
+      const btn = document.getElementById('trackBtn');
+      const card = document.getElementById('resultCard');
+
+      if (!id) { errEl.textContent = 'Please enter a Complaint ID.'; errEl.style.display = 'block'; return; }
+
+      errEl.style.display = 'none';
+      card.classList.remove('show');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spin"></span>';
+
+      try {
+        // Query Firestore for complaint with matching id field
+        const q = query(collection(db, 'complaints'), where('id', '==', id));
+        const snap = await getDocs(q);
+
+        if (snap.empty) throw new Error('Complaint not found. Please check your ID.');
+
+        const c = snap.docs[0].data();
+
+        // Populate all result fields
+        document.getElementById('rId').textContent = c.id;
+        document.getElementById('rTitle').textContent = c.title;
+        document.getElementById('rName').textContent = c.full_name;
+        document.getElementById('rCat').textContent = c.ai_category || c.category;
+        document.getElementById('rDept').textContent = c.ai_department || '—';
+        document.getElementById('rWard').textContent = c.ward;
+        document.getElementById('rSummary').textContent = c.ai_summary || 'AI analysis pending.';
+        document.getElementById('rDate').textContent = new Date(c.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
+        // Priority badge
+        const p = c.ai_priority || 'Medium';
+        const pkClass = p.replace(/\s+/g, '-').replace(/[()]/g, ''); // Handle spaces and brackets
+        document.getElementById('rPriority').innerHTML = `<span class="pbadge p-${pkClass}">${p}</span>`;
+
+        // Status badge
+        const s = c.status || 'Open';
+        const sKey = s.replace(' ', '-');
+        const icons = { Open: '🔴', 'In Progress': '🔵', Resolved: '🟢' };
+        const badge = document.getElementById('rBadge');
+        badge.className = `sbadge s-${sKey}`;
+        badge.textContent = `${icons[s] || '🔴'} ${s}`;
+
+        // Build timeline
+        buildTimeline(s, c.created_at, c.updated_at);
+
+        card.classList.add('show');
+
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.style.display = 'block';
+      }
+
+      btn.disabled = false;
+      btn.textContent = '🔍 Track';
+    };
+
+    // Build the 3-step visual timeline based on current status
+    function buildTimeline(status, created, updated) {
+      const stages = [
+        { label: 'Complaint Submitted', desc: `Received on ${new Date(created).toLocaleDateString('en-IN')}`, active: true },
+        { label: 'Under Review / In Progress', desc: 'Being handled by assigned department', active: status === 'In Progress' || status === 'Resolved' },
+        { label: 'Issue Resolved', desc: status === 'Resolved' ? `Resolved on ${new Date(updated).toLocaleDateString('en-IN')}` : 'Awaiting resolution', active: status === 'Resolved' }
+      ];
+
+      const isCurrent = [status === 'Open', status === 'In Progress', status === 'Resolved'];
+      const tl = document.getElementById('tlTrack');
+      tl.innerHTML = stages.map((s, i) => {
+        const cls = isCurrent[i] ? 'tl-current' : (s.active ? 'tl-done' : 'tl-pending');
+        const icon = cls === 'tl-done' ? '✓' : (cls === 'tl-current' ? '●' : '○');
+        const color = cls === 'tl-current' ? 'var(--orange)' : (cls === 'tl-done' ? 'var(--green)' : 'var(--gray-300)');
+        return `<div class="tl-item">
+        <div class="tl-dot ${cls}">${icon}</div>
+        <h5 style="color:${color}">${s.label}</h5>
+        <p>${s.desc}</p>
+      </div>`;
+      }).join('');
+    }
+
+    // Auto-track if ID is passed in URL like track.html?id=NS-2025-XXXXX
+    const p = new URLSearchParams(window.location.search).get('id');
+    if (p) { document.getElementById('trackId').value = p; window.track(); }
+  </script>
+</body>
+
+</html>
