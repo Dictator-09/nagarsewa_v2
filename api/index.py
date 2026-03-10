@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
@@ -17,6 +17,7 @@ print(f"DEBUG: Gemini Key: {os.environ.get('GEMINI_API_KEY', 'NOT FOUND')[:6]}..
 print(f"DEBUG: Groq Key: {os.environ.get('GROQ_API_KEY', 'NOT FOUND')[:6]}...")
 
 app = FastAPI(title="NagarSeva AI Predictor")
+router = APIRouter(prefix="/api")
 
 # Add CORS middleware
 app.add_middleware(
@@ -70,7 +71,7 @@ class ComplaintInput(BaseModel):
     title: str
     description: str
 
-@app.post("/predict")
+@router.post("/predict")
 def predict_complaint(data: ComplaintInput):
     api_key_gemini = os.environ.get("GEMINI_API_KEY")
     api_key_groq = os.environ.get("GROQ_API_KEY")
@@ -226,7 +227,7 @@ class AdminLogin(BaseModel):
     username: str
     password: str
 
-@app.post("/admin/login")
+@router.post("/admin/login")
 def admin_login(data: AdminLogin):
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
@@ -255,7 +256,7 @@ class LetterRequest(BaseModel):
     ai_priority: str
     status: str
 
-@app.post("/generate_letter")
+@router.post("/generate_letter")
 def generate_response_letter(data: LetterRequest):
     api_key_gemini = os.environ.get("GEMINI_API_KEY")
     api_key_groq = os.environ.get("GROQ_API_KEY")
@@ -313,6 +314,8 @@ Write only the letter text. No extra commentary."""
         return {"letter": text}
     except Exception as e:
         return {"error": str(e)}
+
+app.include_router(router)
 
 if __name__ == "__main__":
     import uvicorn
