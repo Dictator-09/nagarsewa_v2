@@ -2,7 +2,7 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "https://nagarsewa-backend.onrender.com/api/$1"
+            "destination": "https://nagarsewa-v2.onrender.com/api/$1"
         },
         {
             "source": "/",
