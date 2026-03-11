@@ -14,7 +14,7 @@ I recommend using **Render.com** or **Railway.app** for the backend.
 4.  **Configure**:
     -   **Runtime**: `Python`
     -   **Build Command**: `pip install -r requirements.txt`
-    -   **Start Command**: `uvicorn app:app --host 0.0.0.0 --port $PORT`
+    -   **Start Command**: `uvicorn api.index:app --host 0.0.0.0 --port $PORT`
 5.  **Environment Variables**:
     -   Go to "Environment" and add:
         -   `GEMINI_API_KEY`: Your Gemini API Key.
@@ -30,7 +30,7 @@ I recommend using **Render.com** or **Railway.app** for the backend.
 
 ### Option C: Koyeb.com
 1.  **Sign up** at [Koyeb.com](https://koyeb.com).
-2.  **Configure**: Run Command should be `uvicorn app:app --host 0.0.0.0 --port 8000`.
+2.  **Configure**: Run Command should be `uvicorn api.index:app --host 0.0.0.0 --port 8000`.
 3.  **Variables**: Add your keys in the dashboard.
 
 ---
