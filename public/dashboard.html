@@ -1015,7 +1015,7 @@
         const c = currentComplaint;
 
         try {
-          const res = await fetch('/api/generate_letter', {
+          const res = await fetch('https://nagarsewa-v2.onrender.com/api/generate_letter', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1075,7 +1075,7 @@
       btn.disabled = true;
 
       try {
-        const res = await fetch('/api/admin/login', {
+        const res = await fetch('https://nagarsewa-v2.onrender.com/api/admin/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: user, password: pass })

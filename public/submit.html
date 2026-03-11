@@ -663,7 +663,7 @@
 
     // Call local FastAPI model to analyze the complaint
     async function analyzeWithAI(title, description, category) {
-      const res = await fetch('/api/predict', {
+      const res = await fetch('https://nagarsewa-v2.onrender.com/api/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
