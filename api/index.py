@@ -28,43 +28,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- ADMIN DATABASE SETUP ---
-DB_NAME = "admins.db"
+# --- ADMIN VALIDATION ---
+def get_admin_credentials():
+    env_user = os.environ.get("ADMIN_USERNAME", "admin")
+    env_pass = os.environ.get("ADMIN_PASSWORD", "nagarseva2025")
+    return env_user, env_pass
 
-def hash_password(password: str, salt: bytes = None):
-    if salt is None:
-        salt = os.urandom(16)
-    # Use PBKDF2 with SHA-256 and 100,000 iterations for secure hashing
-    pwdhash = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-    return pwdhash, salt
-
-def init_db():
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS admins (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password_hash BLOB NOT NULL,
-            salt BLOB NOT NULL
-        )
-    ''')
-    
-    # Check if we need to seed the default admin
-    c.execute('SELECT COUNT(*) FROM admins')
-    if c.fetchone()[0] == 0:
-        env_user = os.environ.get("ADMIN_USERNAME", "admin")
-        env_pass = os.environ.get("ADMIN_PASSWORD", "nagarseva2025")
-        pwdhash, salt = hash_password(env_pass)
-        c.execute('INSERT INTO admins (username, password_hash, salt) VALUES (?, ?, ?)', 
-                  (env_user, pwdhash, salt))
-        print(f"DEBUG: Seeded default admin '{env_user}' into the database.")
-        
-    conn.commit()
-    conn.close()
-
-# Initialize DB on startup
-init_db()
 
 class ComplaintInput(BaseModel):
     category: str
@@ -229,20 +198,10 @@ class AdminLogin(BaseModel):
 
 @router.post("/admin/login")
 def admin_login(data: AdminLogin):
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute('SELECT password_hash, salt FROM admins WHERE username = ?', (data.username,))
-    row = c.fetchone()
-    conn.close()
-
-    if row:
-        stored_hash, stored_salt = row
-        # Hash the incoming password with the stored salt
-        pwdhash, _ = hash_password(data.password, stored_salt)
-        
-        # Compare hashes securely
-        if pwdhash == stored_hash:
-            return {"success": True}
+    env_user, env_pass = get_admin_credentials()
+    
+    if data.username == env_user and data.password == env_pass:
+        return {"success": True}
             
     return {"success": False, "error": "Invalid credentials"}
 
