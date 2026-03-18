@@ -28,12 +28,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- ADMIN VALIDATION ---
-def get_admin_credentials():
-    env_user = os.environ.get("ADMIN_USERNAME", "admin")
-    env_pass = os.environ.get("ADMIN_PASSWORD", "nagarseva2025")
-    return env_user, env_pass
-
+# --- ADMIN VALIDATION DEPRECATED (Moved to Firebase Auth) ---
 
 class ComplaintInput(BaseModel):
     category: str
@@ -199,19 +194,6 @@ You must respond with ONLY a JSON object exactly matching this schema:
         if status_code == 429:
              return {"error": "Gemini Rate Limit Exceeded. Tip: Get a free key from console.groq.com and add GROQ_API_KEY to your .env for a much higher limit."}
         return {"error": f"Gemini API Error: {str(e)}"}
-class AdminLogin(BaseModel):
-    username: str
-    password: str
-
-@router.post("/admin/login")
-def admin_login(data: AdminLogin):
-    env_user, env_pass = get_admin_credentials()
-    
-    if data.username == env_user and data.password == env_pass:
-        return {"success": True}
-            
-    return {"success": False, "error": "Invalid credentials"}
-
 class LetterRequest(BaseModel):
     id: str
     full_name: str
