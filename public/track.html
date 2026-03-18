@@ -219,8 +219,8 @@
       if (user) {
         document.getElementById('loginLi').style.display = 'none';
         document.getElementById('userContainer').style.display = 'block';
-        document.getElementById('userName').textContent = user.displayName;
-        document.getElementById('userPhoto').src = user.photoURL;
+        document.getElementById('userName').textContent = user.displayName || 'Citizen';
+        document.getElementById('userPhoto').src = user.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
       } else {
         document.getElementById('loginLi').style.display = 'block';
         document.getElementById('userContainer').style.display = 'none';

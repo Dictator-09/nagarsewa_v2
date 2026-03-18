@@ -269,12 +269,12 @@
 
         // Show user profile in nav
         document.getElementById('userContainer').style.display = 'block';
-        document.getElementById('userName').textContent = user.displayName;
-        document.getElementById('userPhoto').src = user.photoURL;
+        document.getElementById('userName').textContent = user.displayName || 'Citizen';
+        document.getElementById('userPhoto').src = user.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
 
         // Pre-fill name and email
-        document.getElementById('full_name').value = user.displayName;
-        document.getElementById('email').value = user.email;
+        document.getElementById('full_name').value = user.displayName || '';
+        document.getElementById('email').value = user.email || '';
       } else {
         currentUser = null;
         document.getElementById('authPrompt').style.display = 'block';
