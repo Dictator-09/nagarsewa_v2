@@ -49,6 +49,10 @@ def predict_complaint(data: ComplaintInput):
 Analyze the following citizen complaint and output a pure JSON object categorizing it.
 Do NOT use markdown block wrappers (like ```json), output strictly the JSON object.
 
+**CRITICAL RULE: Municipal Relevance**
+Determine if the complaint is related to municipal/civic services (e.g., public roads, water supply, street lights, sanitation, public health). 
+Personal discomfort, private property issues (e.g., "my AC is broken", "my phone screen is cracked"), or private domestic disputes are NOT municipal issues.
+
 Allowed Departments:
 Allowed Departments:
 - Roads & Pothole Maintenance
@@ -117,9 +121,10 @@ Complaint Description: {data.description}
 
 You must respond with ONLY a JSON object exactly matching this schema:
 {{
-  "ai_department": "<one of the Allowed Departments>",
+  "is_municipal_issue": <boolean, true if it's a civic/public service issue, false if personal/irrelevant>,
+  "ai_department": "<one of the Allowed Departments or 'N/A' if not a municipal issue>",
   "ai_priority": "<Very Low, Low, Medium, High, or Severe (Immediate Action) based on urgency and public impact>",
-  "ai_summary": "<A 1-sentence professional summary of the issue>",
+  "ai_summary": "<If is_municipal_issue is true, a 1-sentence professional summary. If false, a polite 1-sentence explanation of why it was rejected (e.g., 'This is a private property issue not handled by the municipality.')>",
   "raw_severity_score": <A float between 1.0 (least severe) and 10.0 (catastrophic safety hazard)>
 }}"""
 
@@ -140,6 +145,7 @@ You must respond with ONLY a JSON object exactly matching this schema:
             parsed = resp.json()['choices'][0]['message']['content']
             res = json.loads(parsed)
             return {
+                "is_municipal_issue": bool(res.get("is_municipal_issue", True)),
                 "ai_category": data.category,
                 "ai_department": res.get("ai_department", "General Administration"),
                 "ai_priority": res.get("ai_priority", "Medium"),
@@ -179,6 +185,7 @@ You must respond with ONLY a JSON object exactly matching this schema:
         parsed_result = json.loads(text)
         
         return {
+            "is_municipal_issue": bool(parsed_result.get("is_municipal_issue", True)),
             "ai_category": data.category,
             "ai_department": parsed_result.get("ai_department", "General Administration"),
             "ai_priority": parsed_result.get("ai_priority", "Medium"),

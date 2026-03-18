@@ -371,6 +371,7 @@
       if (data.error) throw new Error(data.error);
 
       return {
+        is_municipal_issue: data.is_municipal_issue !== false,
         ai_category: data.ai_category || category,
         ai_department: data.ai_department || 'General Administration',
         ai_priority: data.ai_priority || 'Medium',
@@ -426,6 +427,15 @@
       try {
         // Step 1: Call Local FastAPI AI
         const ai = await analyzeWithAI(data.title, data.description, data.category);
+
+        // RELEVANCE CHECK
+        if (ai.is_municipal_issue === false) {
+          errEl.innerHTML = `<strong>⚠️ Not a Municipal Issue:</strong> ${ai.ai_summary}<br><small>Please report only public service or civic infrastructure issues.</small>`;
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          btn.innerHTML = '🚀 Submit Complaint';
+          return;
+        }
 
         // Step 2: Save to Firebase Firestore
         const complaintId = generateId();
