@@ -9,134 +9,44 @@
     href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="css/global.css">
+  <script src="js/global.js" defer></script>
   <style>
-    body {
-      font-family: 'Source Sans 3', sans-serif;
-      color: var(--gray-900);
-      background: var(--gray-50);
-      line-height: 1.6
-    }
-
+    /* Admin Dashboard Specific Styles */
     /* LOGIN SCREEN */
     .login-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: var(--gray-50);
-      position: fixed;
-      inset: 0;
-      z-index: 999
+      display: flex; align-items: center; justify-content: center; min-height: 100vh;
+      background: var(--gray-50); position: fixed; inset: 0; z-index: 9999;
     }
-
     .login-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 48px 40px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 8px 40px rgba(0, 0, 0, .12);
-      text-align: center;
-      border-top: 5px solid var(--orange)
+      background: #fff; border-radius: 20px; padding: 48px 40px; width: 100%; max-width: 420px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08); text-align: center; border-top: 5px solid var(--orange);
     }
-
     .login-logo {
-      width: 64px;
-      height: 64px;
-      background: var(--orange);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Merriweather', serif;
-      font-weight: 900;
-      font-size: 24px;
-      color: #fff;
-      margin: 0 auto 20px
+      width: 64px; height: 64px; background: var(--orange); border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 24px; color: #fff; margin: 0 auto 20px;
     }
-
-    .login-card h2 {
-      font-family: 'Merriweather', serif;
-      font-size: 24px;
-      font-weight: 900;
-      margin-bottom: 6px
-    }
-
-    .login-card p {
-      color: var(--gray-500);
-      font-size: 15px;
-      margin-bottom: 32px
-    }
-
-    .login-group {
-      margin-bottom: 18px;
-      text-align: left
-    }
-
-    .login-group label {
-      display: block;
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--gray-700);
-      margin-bottom: 7px
-    }
-
+    .login-card h2 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+    .login-card p { color: var(--gray-500); font-size: 15px; margin-bottom: 32px; }
+    .login-group { margin-bottom: 20px; text-align: left; }
+    .login-group label { display: block; font-weight: 700; font-size: 13px; color: var(--gray-700); margin-bottom: 8px; }
     .login-group input {
-      width: 100%;
-      padding: 13px 16px;
-      border: 1.5px solid var(--gray-300);
-      border-radius: 8px;
-      font-family: 'Source Sans 3', sans-serif;
-      font-size: 15px;
-      outline: none;
-      transition: .2s
+      width: 100%; padding: 14px 16px; border: 1.5px solid var(--gray-300); border-radius: 10px;
+      font-family: inherit; font-size: 15px; outline: none; transition: 0.2s;
     }
-
-    .login-group input:focus {
-      border-color: var(--orange);
-      box-shadow: 0 0 0 3px rgba(232, 93, 4, .1)
-    }
-
+    .login-group input:focus { border-color: var(--blue-dark); box-shadow: 0 0 0 3px rgba(10,31,68,0.1); }
     .login-btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--orange);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Source Sans 3', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: .2s;
-      margin-top: 8px
+      width: 100%; padding: 14px; background: var(--blue-dark); color: #fff; border: none; border-radius: 10px;
+      font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s; margin-top: 8px;
     }
-
-    .login-btn:hover {
-      background: var(--orange-dark)
-    }
-
+    .login-btn:hover { background: #071633; }
     .login-error {
-      display: none;
-      background: #FEF2F2;
-      border: 1.5px solid #FECACA;
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: #DC2626;
-      font-size: 14px;
-      margin-bottom: 16px
+      display: none; background: #FEF2F2; border: 1.5px solid #FECACA; border-radius: 8px; padding: 12px; color: #DC2626; font-size: 14px; margin-bottom: 16px; font-weight: 600;
     }
+    .login-hint { margin-top: 20px; font-size: 13px; color: var(--gray-500); font-weight: 600; }
 
-    .login-hint {
-      margin-top: 16px;
-      font-size: 12px;
-      color: var(--gray-500)
-    }
-
-    /* MAIN DASHBOARD - hidden until logged in */
-    .dashboard-content {
-      display: none
-    }
+    /* MAIN DASHBOARD */
+    .dashboard-content { display: none; }
 
 
 
@@ -637,21 +547,26 @@
     </div>
   </div>
 
-  <!-- MAIN DASHBOARD - only visible after login -->
   <div class="dashboard-content" id="dashboardContent">
-    <nav>
+    <!-- UNIFIED NAVBAR -->
+    <nav id="navbar">
       <div class="nav-inner">
         <a href="index.html" class="nav-brand">
           <div class="nav-logo">NS</div>
-          <span class="nav-title">Nagar<span>Seva</span> CRM</span>
+          <span class="nav-title">Nagar<span>Seva</span></span>
         </a>
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="submit.html">Submit Complaint</a></li>
-          <li><a href="track.html">Track Status</a></li>
-          <li><a href="dashboard.html" class="active">Admin Dashboard</a></li>
-          <li><button class="logout-btn" onclick="sessionStorage.clear();location.reload()">🚪 Logout</button></li>
-        </ul>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle Navigation">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="nav-menu" id="navMenu">
+          <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="submit.html">Submit</a></li>
+            <li><a href="track.html">Track</a></li>
+            <li><a href="dashboard.html" class="dash">Admin Panel</a></li>
+            <li><button class="logout-btn" onclick="sessionStorage.clear();location.reload()" style="background: var(--orange); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">🚪 Logout</button></li>
+          </ul>
+        </div>
       </div>
     </nav>
 
