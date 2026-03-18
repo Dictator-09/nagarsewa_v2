@@ -257,7 +257,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
     import { getFirestore, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
     import { firebaseConfig } from "./firebase-config.js";
 
@@ -300,7 +300,7 @@
       if (e) e.preventDefault();
       try {
         await setPersistence(auth, browserLocalPersistence);
-        await signInWithPopup(auth, provider);
+        await signInWithRedirect(auth, provider);
       } catch (err) {
         if (err.code !== 'auth/cancelled-popup-request') {
           alert("Login failed: " + err.message);
