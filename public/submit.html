@@ -296,14 +296,13 @@
 
       try {
         await setPersistence(auth, browserLocalPersistence);
-        await signInWithRedirect(auth, provider);
+        await signInWithPopup(auth, provider);
       } catch (err) {
         console.error("Auth Error:", err);
-        // Ignore cancelled-popup-request as it's usually benign
         if (err.code === 'auth/cancelled-popup-request') {
           // Do nothing
-        } else if (err.code === 'auth/internal-error' || err.message.includes('initial state')) {
-          alert("Security Block: Your browser is blocking the login state. Please disable 'Block third-party cookies' or use a non-Incognito window.");
+        } else if (err.code === 'auth/popup-blocked') {
+          alert("Popup blocked! Please allow popups for this site to sign in with Google, or use the Email login option.");
         } else {
           alert("Login failed: " + err.message);
         }

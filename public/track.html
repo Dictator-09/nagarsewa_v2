@@ -245,12 +245,12 @@
 
       try {
         await setPersistence(auth, browserLocalPersistence);
-        await signInWithRedirect(auth, provider);
+        await signInWithPopup(auth, provider);
         document.getElementById('authOverlay').classList.remove('open');
       } catch (err) {
         if (err.code !== 'auth/cancelled-popup-request') {
           const errEl = document.getElementById('authErrorMsg');
-          errEl.textContent = '❌ Google Login failed';
+          errEl.textContent = err.code === 'auth/popup-blocked' ? '❌ Popup blocked. Please allow popups for this site.' : '❌ Google Login failed. Check your connection or use Email Login.';
           errEl.style.display = 'block';
         }
       } finally {

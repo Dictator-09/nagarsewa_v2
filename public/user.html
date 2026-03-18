@@ -258,9 +258,11 @@
       if (e) e.preventDefault();
       try {
         await setPersistence(auth, browserLocalPersistence);
-        await signInWithRedirect(auth, provider);
+        await signInWithPopup(auth, provider);
       } catch (err) {
-        if (err.code !== 'auth/cancelled-popup-request') {
+        if (err.code === 'auth/popup-blocked') {
+          alert("Popup blocked! Please allow popups to sign in with Google.");
+        } else if (err.code !== 'auth/cancelled-popup-request') {
           alert("Login failed: " + err.message);
         }
       }
