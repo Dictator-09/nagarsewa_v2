@@ -269,6 +269,9 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
+    // Set persistence once at initialization to avoid promise conflicts
+    setPersistence(auth, browserLocalPersistence).catch(err => console.error("Persistence error:", err));
+
     let currentUser = null;
     let allComplaints = [];
 
@@ -305,7 +308,6 @@
     // Google Login
     document.getElementById('googleLoginBtn').onclick = async (e) => {
       try {
-        await setPersistence(auth, browserLocalPersistence);
         await signInWithPopup(auth, provider);
         document.getElementById('authOverlay').classList.remove('open');
       } catch (err) {
@@ -328,7 +330,6 @@
       btn.disabled = true;
 
       try {
-        await setPersistence(auth, browserLocalPersistence);
         try {
           await signInWithEmailAndPassword(auth, email, pass);
         } catch (err) {

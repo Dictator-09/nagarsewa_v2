@@ -175,20 +175,7 @@
           <div class="form-group"><label>Ward / Area <span class="req">*</span></label><input type="text" id="ward"
               placeholder="e.g. Ward 12, Andheri East" /></div>
         </div>
-        <div class="form-group">
-          <label>Complaint Category <span class="req">*</span></label>
-          <select id="category">
-            <option value="">-- Select a broader category --</option>
-            <option>Roads, Transport & Infrastructure</option>
-            <option>Water, Electricity & Utilities</option>
-            <option>Public Health, Sanitation & Waste</option>
-            <option>Building, Housing & Urban Planning</option>
-            <option>Law Enforcement & Public Safety</option>
-            <option>Revenue, Taxes & Estate</option>
-            <option>Social Welfare & Education</option>
-            <option>General Administration & Services</option>
-          </select>
-        </div>
+        <!-- Category removed - AI will categorize -->
         <div class="form-group"><label>Complaint Title <span class="req">*</span></label><input type="text" id="title"
             placeholder="e.g. Large pothole on Main Street near bus stop" /></div>
         <div class="form-group">
@@ -257,6 +244,9 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
+    // Set persistence once at initialization to avoid promise conflicts
+    setPersistence(auth, browserLocalPersistence).catch(err => console.error("Persistence error:", err));
+
     let currentUser = null;
 
       // AUTH STATE LISTENER
@@ -288,7 +278,6 @@
     const doLogin = async (e) => {
       if (e) e.preventDefault();
       try {
-        await setPersistence(auth, browserLocalPersistence);
         await signInWithPopup(auth, provider);
       } catch (err) {
         if (err.code === 'auth/popup-blocked') {
@@ -313,7 +302,6 @@
       btn.disabled = true;
 
       try {
-        await setPersistence(auth, browserLocalPersistence);
         try {
           await signInWithEmailAndPassword(auth, email, pass);
         } catch (err) {
@@ -356,12 +344,11 @@
     }
 
     // Call local FastAPI model to analyze the complaint
-    async function analyzeWithAI(title, description, category) {
+    async function analyzeWithAI(title, description) {
       const res = await fetch('https://nagarsewa-v2.onrender.com/api/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          category: category,
           title: title,
           description: description
         })
@@ -402,7 +389,7 @@
       };
 
       // Validate required fields
-      for (const f of ['full_name', 'phone', 'address', 'ward', 'category', 'title', 'description']) {
+      for (const f of ['full_name', 'phone', 'address', 'ward', 'title', 'description']) {
         if (!data[f]) {
           errEl.textContent = `Please fill in: ${f.replace('_', ' ')}`;
           errEl.style.display = 'block';
@@ -449,9 +436,9 @@
           address: data.address,
           email: data.email,
           ward: data.ward,
-          category: data.category,
           title: data.title,
           description: data.description,
+          category: ai.ai_category, // Use AI predicted category
           ai_category: ai.ai_category,
           ai_department: ai.ai_department,
           ai_summary: ai.ai_summary,

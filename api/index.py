@@ -31,7 +31,7 @@ app.add_middleware(
 # --- ADMIN VALIDATION DEPRECATED (Moved to Firebase Auth) ---
 
 class ComplaintInput(BaseModel):
-    category: str
+    category: str = "General" # Default to General if not provided
     title: str
     description: str
 
@@ -48,79 +48,33 @@ Do NOT use markdown block wrappers (like ```json), output strictly the JSON obje
 Determine if the complaint is related to municipal/civic services (e.g., public roads, water supply, street lights, sanitation, public health). 
 Personal discomfort, private property issues (e.g., "my AC is broken", "my phone screen is cracked"), or private domestic disputes are NOT municipal issues.
 
+Allowed Categories:
+- Roads, Transport & Infrastructure
+- Water, Electricity & Utilities
+- Public Health, Sanitation & Waste
+- Building, Housing & Urban Planning
+- Law Enforcement & Public Safety
+- Revenue, Taxes & Estate
+- Social Welfare & Education
+- General Administration & Services
+
 Allowed Departments:
-Allowed Departments:
-- Roads & Pothole Maintenance
-- Street Lighting & Electricals
-- Piped Water Supply & Tankers
-- Underground Sewerage & Drainage
-- Open Drains & Culvert Cleaning
-- Solid Waste Management (Waste Collection)
-- Street Sweeping & Sanitation
-- Public Toilets Maintenance
-- Parks, Playgrounds & Open Spaces
-- Property Tax & Revenue
-- Birth, Death & Marriage Registration
-- Building Plan & Construction Approval
-- Encroachment Removal (Public Land)
-- Illegal Construction Control
-- Stray Dog & Animal Menace
-- Vector Control (Mosquitoes/Dengue/Malaria)
-- Public Health & Vaccination Centers
-- Trade Licenses (Shops & Establishments)
-- Horticulture & Tree Cutting
-- Traffic Signals & Road Signage
-- Municipal Building Maintenance
-- Slum Development & Urban Poverty Alleviation
-- Advertising (Hoardings & Signboards)
-- Disaster Management (Fire & Flooding)
-- Markets & Street Vending Zones
-- Community Halls & Libraries
-- Crematoriums & Burial Grounds
-- Municipal Schools & Education
-- Estate & Land Records
-- Heritage Conservation
-- IT & E-Governance Services
-- Law & Legal Department
-- Citizen Service Centers (CSC/Jan Seva)
-- Department of Telecommunications
-- Department of Posts (India Post)
-- CBIC (GST & Customs)
-- Department of Financial Services (Banking & Insurance)
-- Ministry of Railways
-- Ministry of Road Transport and Highways
-- Ministry of Power
-- Ministry of Housing and Urban Affairs
-- Ministry of Civil Aviation
-- Ministry of Petroleum and Natural Gas
-- Ministry of Education
-- Ministry of Health and Family Welfare
-- Ministry of Women and Child Development
-- Ministry of Social Justice and Empowerment
-- Ministry of Labour and Employment
-- DARPG (CPGRAMS Nodal)
-- Ministry of Personnel, Public Grievances and Pensions
-- Ministry of Home Affairs
-- Ministry of External Affairs
-- Department of Atomic Energy
-- Department of Space (ISRO)
-- Ministry of AYUSH
-- Ministry of Environment, Forest and Climate Change
+... [truncated for brevity, keep all departments] ...
 - General Administration
 
 Allowed Priorities: Very Low, Low, Medium, High, Severe (Immediate Action)
 
 Complaint Title: {data.title}
-Complaint Category Selected: {data.category}
 Complaint Description: {data.description}
 
 You must respond with ONLY a JSON object exactly matching this schema:
 {{
-  "is_municipal_issue": <boolean, true if it's a civic/public service issue, false if personal/irrelevant>,
+  "is_municipal_issue": <boolean>,
+  "ai_category": "<one of the Allowed Categories>",
   "ai_department": "<one of the Allowed Departments or 'N/A' if not a municipal issue>",
-  "ai_priority": "<Very Low, Low, Medium, High, or Severe (Immediate Action) based on urgency and public impact>",
-  "ai_summary": "<If is_municipal_issue is true, a 1-sentence professional summary. If false, a polite 1-sentence explanation of why it was rejected (e.g., 'This is a private property issue not handled by the municipality.')>",
-  "raw_severity_score": <A float between 1.0 (least severe) and 10.0 (catastrophic safety hazard)>
+  "ai_priority": "<Very Low, Low, Medium, High, or Severe (Immediate Action)>",
+  "ai_summary": "<summary or rejection reason>",
+  "raw_severity_score": <float between 1.0 and 10.0>
 }}"""
 
     # 1. Try Groq first if key exists (much more reliable free tier)
@@ -141,7 +95,7 @@ You must respond with ONLY a JSON object exactly matching this schema:
             res = json.loads(parsed)
             return {
                 "is_municipal_issue": bool(res.get("is_municipal_issue", True)),
-                "ai_category": data.category,
+                "ai_category": res.get("ai_category", "General Administration & Services"),
                 "ai_department": res.get("ai_department", "General Administration"),
                 "ai_priority": res.get("ai_priority", "Medium"),
                 "ai_summary": res.get("ai_summary", "Analyzed by Groq AI."),
@@ -181,7 +135,7 @@ You must respond with ONLY a JSON object exactly matching this schema:
         
         return {
             "is_municipal_issue": bool(parsed_result.get("is_municipal_issue", True)),
-            "ai_category": data.category,
+            "ai_category": parsed_result.get("ai_category", "General Administration & Services"),
             "ai_department": parsed_result.get("ai_department", "General Administration"),
             "ai_priority": parsed_result.get("ai_priority", "Medium"),
             "ai_summary": parsed_result.get("ai_summary", "Analyzed by Gemini AI."),

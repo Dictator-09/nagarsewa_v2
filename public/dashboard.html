@@ -871,6 +871,9 @@
       const db = getFirestore(app);
       const provider = new GoogleAuthProvider();
 
+      // Set persistence once at initialization to avoid promise conflicts
+      setPersistence(auth, browserLocalPersistence).catch(err => console.error("Persistence error:", err));
+
       let currentComplaint = null;
       let currentDocId = null;
       let currentUserProfile = null; // { email, role }
@@ -930,7 +933,6 @@
         if (e) e.preventDefault();
         const btn = document.getElementById('loginBtnGoogle');
         try {
-          await setPersistence(auth, browserLocalPersistence);
           await signInWithPopup(auth, provider);
         } catch (err) {
           if (err.code === 'auth/popup-blocked') {
@@ -953,7 +955,6 @@
         btn.disabled = true;
 
         try {
-          await setPersistence(auth, browserLocalPersistence);
           await signInWithEmailAndPassword(auth, email, pass);
         } catch (err) {
           errEl.textContent = '❌ ' + (err.message.replace('Firebase:', '').trim() || 'Authentication failed');
