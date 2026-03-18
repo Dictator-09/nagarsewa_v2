@@ -236,26 +236,14 @@
     // GOOGLE LOGIN
     document.getElementById('googleLoginBtn').onclick = async (e) => {
       e.preventDefault();
-      const btn = e.target.closest('button');
-      if (btn.classList.contains('loading')) return;
-
-      btn.classList.add('loading');
-      const originalHTML = btn.innerHTML;
-      btn.innerHTML = '<span class="spin" style="border-color:var(--gray-900);border-top-color:transparent;"></span>';
-
       try {
         await setPersistence(auth, browserLocalPersistence);
         await signInWithPopup(auth, provider);
         document.getElementById('authOverlay').classList.remove('open');
       } catch (err) {
-        if (err.code !== 'auth/cancelled-popup-request') {
-          const errEl = document.getElementById('authErrorMsg');
-          errEl.textContent = err.code === 'auth/popup-blocked' ? '❌ Popup blocked. Please allow popups for this site.' : '❌ Google Login failed. Check your connection or use Email Login.';
-          errEl.style.display = 'block';
+        if (err.code === 'auth/popup-blocked') {
+          alert("Popup blocked! Please allow popups to sign in with Google.");
         }
-      } finally {
-        btn.classList.remove('loading');
-        btn.innerHTML = originalHTML;
       }
     };
 

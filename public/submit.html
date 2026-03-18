@@ -287,28 +287,13 @@
     // LOGIN FUNCTIONS (Both Overlay and Nav)
     const doLogin = async (e) => {
       if (e) e.preventDefault();
-      const btn = e ? (e.target.id === 'navLoginBtn' ? e.target : document.getElementById('loginBtn')) : document.getElementById('loginBtn');
-
-      if (btn.classList.contains('loading')) return;
-      btn.classList.add('loading');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<span class="spin"></span> Logging in...';
-
       try {
         await setPersistence(auth, browserLocalPersistence);
         await signInWithPopup(auth, provider);
       } catch (err) {
-        console.error("Auth Error:", err);
-        if (err.code === 'auth/cancelled-popup-request') {
-          // Do nothing
-        } else if (err.code === 'auth/popup-blocked') {
-          alert("Popup blocked! Please allow popups for this site to sign in with Google, or use the Email login option.");
-        } else {
-          alert("Login failed: " + err.message);
+        if (err.code === 'auth/popup-blocked') {
+          alert("Popup blocked! Please allow popups to sign in with Google.");
         }
-      } finally {
-        btn.classList.remove('loading');
-        btn.innerHTML = originalText;
       }
     };
 
