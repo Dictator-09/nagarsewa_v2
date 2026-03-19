@@ -166,9 +166,17 @@
           <div class="form-group"><label>Mobile Number (10 digits) <span class="req">*</span></label><input type="tel"
               id="phone" placeholder="e.g. 9876543210" maxlength="10" /></div>
         </div>
-        <div class="form-group"><label>Full Address <span class="req">*</span></label>
-          <textarea id="address" placeholder="Door No, Street Name, Landmark..." style="min-height: 80px;"></textarea>
+        <div class="form-group"><label>Street Address / Locality <span class="req">*</span></label>
+          <input type="text" id="addr_street" placeholder="e.g. 123 Main St, Near Park" />
         </div>
+        <div class="form-row">
+          <div class="form-group"><label>City <span class="req">*</span></label><input type="text" id="addr_city"
+              placeholder="e.g. Mumbai" /></div>
+          <div class="form-group"><label>State <span class="req">*</span></label><input type="text" id="addr_state"
+              placeholder="e.g. Maharashtra" /></div>
+        </div>
+        <div class="form-group"><label>Pincode <span class="req">*</span></label><input type="text" id="addr_pincode"
+            placeholder="e.g. 400001" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')" /></div>
         <div class="form-row">
           <div class="form-group"><label>Email Address</label><input type="email" id="email" placeholder="optional" />
           </div>
@@ -359,7 +367,7 @@
 
       return {
         is_municipal_issue: data.is_municipal_issue !== false,
-        ai_category: data.ai_category || category,
+        ai_category: data.ai_category || "General Administration & Services",
         ai_department: data.ai_department || 'General Administration',
         ai_priority: data.ai_priority || 'Medium',
         ai_summary: data.ai_summary || "Complaint analyzed.",
@@ -380,21 +388,31 @@
       const data = {
         full_name: document.getElementById('full_name').value.trim(),
         phone: document.getElementById('phone').value.trim(),
-        address: document.getElementById('address').value.trim(),
+        addr_street: document.getElementById('addr_street').value.trim(),
+        addr_city: document.getElementById('addr_city').value.trim(),
+        addr_state: document.getElementById('addr_state').value.trim(),
+        addr_pincode: document.getElementById('addr_pincode').value.trim(),
         email: document.getElementById('email').value.trim(),
         ward: document.getElementById('ward').value.trim(),
-        category: document.getElementById('category').value,
         title: document.getElementById('title').value.trim(),
         description: document.getElementById('description').value.trim()
       };
 
       // Validate required fields
-      for (const f of ['full_name', 'phone', 'address', 'ward', 'title', 'description']) {
+      const reqFields = ['full_name', 'phone', 'addr_street', 'addr_city', 'addr_state', 'addr_pincode', 'ward', 'title', 'description'];
+      for (const f of reqFields) {
         if (!data[f]) {
-          errEl.textContent = `Please fill in: ${f.replace('_', ' ')}`;
+          errEl.textContent = `Please fill in: ${f.replace('addr_', '').replace('_', ' ')}`;
           errEl.style.display = 'block';
           return;
         }
+      }
+
+      // Pincode Validation
+      if (data.addr_pincode.length !== 6 || isNaN(data.addr_pincode)) {
+        errEl.textContent = 'Please enter a valid 6-digit Pincode.';
+        errEl.style.display = 'block';
+        return;
       }
 
       // Mobile Validation (India 10 digits)
@@ -413,7 +431,7 @@
 
       try {
         // Step 1: Call Local FastAPI AI
-        const ai = await analyzeWithAI(data.title, data.description, data.category);
+        const ai = await analyzeWithAI(data.title, data.description);
 
         // RELEVANCE CHECK
         if (ai.is_municipal_issue === false) {
@@ -433,7 +451,11 @@
           uid: currentUser.uid,
           full_name: data.full_name,
           phone: data.phone,
-          address: data.address,
+          address: `${data.addr_street}, ${data.addr_city}, ${data.addr_state} - ${data.addr_pincode}`,
+          address_street: data.addr_street,
+          address_city: data.addr_city,
+          address_state: data.addr_state,
+          address_pincode: data.addr_pincode,
           email: data.email,
           ward: data.ward,
           title: data.title,

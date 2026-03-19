@@ -825,6 +825,7 @@
               <div class="mitem"><label>Phone</label><span id="mPhone"></span></div>
               <div class="mitem"><label>Email</label><span id="mEmail"></span></div>
               <div class="mitem"><label>Ward / Area</label><span id="mWard"></span></div>
+              <div class="mitem" style="grid-column: 1 / -1;"><label>Full Address</label><span id="mAddr"></span></div>
             </div>
           </div>
           <div class="msec">
@@ -1129,6 +1130,7 @@
         document.getElementById('mPhone').textContent = c.phone;
         document.getElementById('mEmail').textContent = c.email || '—';
         document.getElementById('mWard').textContent = c.ward;
+        document.getElementById('mAddr').textContent = c.address || '—';
         document.getElementById('mCat').textContent = c.ai_category || c.category;
         document.getElementById('mDept').textContent = c.ai_department || '—';
         document.getElementById('mDate').textContent = new Date(c.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
